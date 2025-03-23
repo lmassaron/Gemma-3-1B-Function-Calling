@@ -1,4 +1,4 @@
-"""TODO DocString"""
+"""Fine-tuning a Gemma 3-1B model for function calling using LoRA"""
 
 from enum import Enum
 import torch
@@ -57,9 +57,9 @@ def determine_compute_dtype(config):
             else:
                 config.fp16 = True
             config.bf16 = False
-    except (RuntimeError, AttributeError, IndexError):
-        # Handle exceptions with specific error types instead of bare except
-        # This could happen if CUDA is not available or if there's an issue with device query
+    except (RuntimeError, AttributeError, IndexError) as e:
+        # Handle exceptions if CUDA is not available and you are using CPU or MPS
+        print(f"Error determining compute dtype: {e}")  # Log the exception
         compute_dtype = torch.float16
         config.fp16 = False
         config.bf16 = False
@@ -68,27 +68,27 @@ def determine_compute_dtype(config):
 
 
 def preprocess_and_filter(sample):
+    """Preprocesses and filters a sample based on token length"""
     messages = sample["messages"]
     text = tokenizer.apply_chat_template(messages, tokenize=False)
     tokens = tokenizer.encode(text, truncation=False)
-    return (
-        {"text": text}
-        if len(tokens) <= config.training_arguments["max_seq_length"]
-        else None
-    )
+
+    if len(tokens) <= config.training_arguments["max_seq_length"]:
+        return {"text": text}
+    else:
+        return None
 
 
 class ChatmlSpecialTokens(str, Enum):
-    """.."""
-
+    """Enum class defining special tokens used in the ChatML format"""
     tools = "<tools>"
     eotools = "</tools>"
     think = "<think>"
     eothink = "</think>"
     tool_call = "<tool_call>"
     eotool_call = "</tool_call>"
-    tool_response = "<tool_reponse>"
-    eotool_response = "</tool_reponse>"
+    tool_response = "<tool_response>"
+    eotool_response = "</tool_response>"
     pad_token = "<pad>"
     eos_token = "<eos>"
 
@@ -181,17 +181,15 @@ if __name__ == "__main__":
     )
 
     model.resize_token_embeddings(len(tokenizer))
-
     model = model.to(device)
 
-    dataset = load_from_disk(config.dataset_name)
-    dataset = dataset.rename_column("conversations", "messages")
-
-    dataset = dataset.map(preprocess_and_filter, remove_columns="messages").filter(
-        lambda x: x is not None, keep_in_memory=True
+    dataset = (
+        load_from_disk(config.dataset_name)
+        .rename_column("conversations", "messages")
+        .map(preprocess_and_filter, remove_columns="messages")
+        .filter(lambda x: x is not None, keep_in_memory=True)
+        .train_test_split(0.2)
     )
-
-    dataset = dataset.train_test_split(0.2)
 
     peft_config = LoraConfig(
         **config.lora_arguments,
