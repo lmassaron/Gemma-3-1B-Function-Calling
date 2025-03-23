@@ -2,15 +2,11 @@
 
 from enum import Enum
 import torch
-
 from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
-from transformers.models.gemma3 import Gemma3ForCausalLM
-
 from datasets import load_from_disk
 from trl import SFTConfig, SFTTrainer
-from peft import LoraConfig, TaskType, PeftModel
-from sklearn.metrics import accuracy_score
-import numpy as np
+from peft import LoraConfig, TaskType
+
 
 seed = 42
 set_seed(seed)
@@ -81,6 +77,7 @@ def preprocess_and_filter(sample):
 
 class ChatmlSpecialTokens(str, Enum):
     """Enum class defining special tokens used in the ChatML format"""
+
     tools = "<tools>"
     eotools = "</tools>"
     think = "<think>"
