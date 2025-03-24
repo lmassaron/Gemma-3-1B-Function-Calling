@@ -1,5 +1,6 @@
 """Fine-tuning a Gemma 3-1B model for function calling using LoRA"""
 
+import os
 from enum import Enum
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
@@ -10,8 +11,6 @@ from peft import LoraConfig, TaskType
 
 seed = 42
 set_seed(seed)
-
-import os
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"  # Disable tokenization para
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
@@ -115,34 +114,40 @@ class Config:
         ],
     }
     training_arguments = {
+        # Basic training configuration
+        "num_train_epochs": 6,
+        "max_steps": -1,
         "per_device_train_batch_size": 1,
         "per_device_eval_batch_size": 1,
         "gradient_accumulation_steps": 4,
+        "max_seq_length": 2048,
+        "packing": True,
+        # Optimization settings
         "optim": "adamw_torch_fused",
         "learning_rate": 1e-4,
-        "max_grad_norm": 1.0,
-        "num_train_epochs": 6,
-        "warmup_ratio": 0.1,
-        "lr_scheduler_type": "cosine",
-        "max_seq_length": 2048,
-        "save_strategy": "epoch",
-        "eval_strategy": "epoch",
-        "max_steps": -1,
         "weight_decay": 0.1,
-        "report_to": "tensorboard",
-        "logging_dir": "logs/runs",
-        "hub_private_repo": False,
-        "push_to_hub": False,
+        "max_grad_norm": 1.0,
+        "lr_scheduler_type": "cosine",
+        "warmup_ratio": 0.1,
+        # Memory optimization
         "gradient_checkpointing": True,
         "gradient_checkpointing_kwargs": {"use_reentrant": False},
-        "packing": True,
+        # Evaluation and saving
+        "eval_strategy": "epoch",
+        "save_strategy": "epoch",
         "save_steps": 25,
+        "save_total_limit": 2,
         "load_best_model_at_end": True,
         "metric_for_best_model": "eval_loss",
         "greater_is_better": False,
-        "save_total_limit": 2,
+        # Logging and output
         "logging_steps": 5,
+        "report_to": "tensorboard",
+        "logging_dir": "logs/runs",
         "overwrite_output_dir": True,
+        # Model sharing
+        "push_to_hub": False,
+        "hub_private_repo": False,
     }
     fp16 = True
     bf16 = False

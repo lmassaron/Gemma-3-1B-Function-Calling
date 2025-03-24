@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Tuple, Dict, List, Any
 
 import random
-from datasets import load_dataset, Dataset
+from datasets import load_dataset, Dataset, DatasetDict
 
 
 def preprocess_dataset(
@@ -99,6 +99,15 @@ def main():
 
     print(f"Saving test dataset to {test_path}")
     test_dataset.save_to_disk(test_path)
+
+    # Create a DatasetDict with splits
+    dataset_dict = DatasetDict({
+        "train": train_dataset,
+        "test": test_dataset
+    })
+
+    # Push to Hub
+    dataset_dict.push_to_hub("lmassaron/hermes-function-calling-v1")
 
     print("Processing complete!")
 
