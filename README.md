@@ -6,5 +6,5 @@ Baseline, with unquantized Gemma 3-1b-it:
 * Match in helpful exchange: 0.06495
 
 After finetuning:
-* Accuracy in function calling: 0.93438
-* Match in helpful exchange: 0.71362
+* Accuracy in function calling: 0.93189
+* Match in helpful exchange: 0.11841
