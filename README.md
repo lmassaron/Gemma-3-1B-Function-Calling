@@ -2,6 +2,11 @@
 
 This project demonstrates how to fine-tune the `google/gemma-3-1b-it` model for function calling tasks. The process involves preparing the `NousResearch/hermes-function-calling-v1` dataset, fine-tuning the model using Low-Rank Adaptation (LoRA), and evaluating its performance on a test set.
 
+You can find a detailed description of the project by reading my Medium article:
+* [Fine-Tuning Gemma 3 1B for Function Calling: A Step-by-Step Guide](https://medium.com/@lucamassaron/fine-tuning-gemma-3-1b-for-function-calling-a-step-by-step-guide-66a613352f99)
+
+![Function calling as a toolbox](./toolbox.png)
+
 The project is structured into three main Python scripts:
 
 *   `prepare_function_calling_dataset.py`: Downloads and preprocesses the dataset, splitting it into training and testing sets.
