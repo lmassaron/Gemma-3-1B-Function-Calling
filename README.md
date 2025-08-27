@@ -33,8 +33,8 @@ To get started with this project, follow these steps:
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-username/function_calling_gemma3.git
-    cd function_calling_gemma3
+    git clone https://github.com/lmassaron/Gemma-3-1B-Function-Calling.git
+    cd Gemma-3-1B-Function-Calling
     ```
 
 2.  **Install the dependencies:**
