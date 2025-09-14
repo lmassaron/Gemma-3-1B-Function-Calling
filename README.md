@@ -1,4 +1,4 @@
-# function_calling_gemma3
+# Function calling Gemma 3
 
 This project demonstrates how to fine-tune the `google/gemma-3-1b-it` and `google/gemma-3-270m-it`models for function calling tasks. The process involves preparing the `NousResearch/hermes-function-calling-v1` dataset, fine-tuning the model using Low-Rank Adaptation (LoRA), and evaluating its performance on a test set.
 
@@ -43,8 +43,8 @@ To get started with this project, follow these steps:
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/lmassaron/Gemma-3-1B-Function-Calling.git
-    cd Gemma-3-1B-Function-Calling
+    git clone https://github.com/lmassaron/Gemma-3-Function-Calling.git
+    cd Gemma-3-Function-Calling
     ```
 
 2.  **Install the dependencies:**
