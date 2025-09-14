@@ -101,10 +101,7 @@ def main():
     test_dataset.save_to_disk(test_path)
 
     # Create a DatasetDict with splits
-    dataset_dict = DatasetDict({
-        "train": train_dataset,
-        "test": test_dataset
-    })
+    dataset_dict = DatasetDict({"train": train_dataset, "test": test_dataset})
 
     # Push to Hub
     dataset_dict.push_to_hub("lmassaron/hermes-function-calling-v1")

@@ -1,7 +1,7 @@
 """Fine-tuning a Gemma 3-1B model for function calling using LoRA"""
 
-import os
 from enum import Enum
+import os
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
 from datasets import load_from_disk
@@ -68,7 +68,7 @@ def preprocess_and_filter(sample):
     text = tokenizer.apply_chat_template(messages, tokenize=False)
     tokens = tokenizer.encode(text, truncation=False)
 
-    if len(tokens) <= config.training_arguments["max_seq_length"]:
+    if len(tokens) <= config.training_arguments["max_length"]:
         return {"text": text}
     else:
         return None
@@ -97,6 +97,7 @@ class Config:
     model_name = "google/gemma-3-1b-it"
     dataset_name = "processed_data/function_calling_train"
     output_dir = "gemma-3-1B-it-function_calling"  # The directory where the trained model checkpoints, logs, and other artifacts will be saved. It will also be the default name of the model when pushed to the hub if not redefined later.
+    username = "lmassaron"
     lora_arguments = {
         "r": 16,
         "lora_alpha": 64,
@@ -115,12 +116,12 @@ class Config:
     }
     training_arguments = {
         # Basic training configuration
-        "num_train_epochs": 6,
+        "num_train_epochs": 1,
         "max_steps": -1,
         "per_device_train_batch_size": 1,
         "per_device_eval_batch_size": 1,
         "gradient_accumulation_steps": 4,
-        "max_seq_length": 2048,
+        "max_length": 4096,
         "packing": True,
         # Optimization settings
         "optim": "adamw_torch_fused",
@@ -135,7 +136,6 @@ class Config:
         # Evaluation and saving
         "eval_strategy": "epoch",
         "save_strategy": "epoch",
-        "save_steps": 25,
         "save_total_limit": 2,
         "load_best_model_at_end": True,
         "metric_for_best_model": "eval_loss",
@@ -146,15 +146,15 @@ class Config:
         "logging_dir": "logs/runs",
         "overwrite_output_dir": True,
         # Model sharing
-        "push_to_hub": False,
+        "push_to_hub": True,
         "hub_private_repo": False,
     }
-    fp16 = True
-    bf16 = False
+    fp16 = False
+    bf16 = True
+    batch_size = 24
 
 
 if __name__ == "__main__":
-
     config = Config()
 
     # Determine optimal computation dtype based on GPU capability
@@ -176,7 +176,7 @@ if __name__ == "__main__":
 
     model = AutoModelForCausalLM.from_pretrained(
         config.model_name,
-        torch_dtype=compute_dtype,
+        dtype=compute_dtype,
         attn_implementation="eager",
         low_cpu_mem_usage=True,
         device_map="cpu",

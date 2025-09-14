@@ -20,3 +20,5 @@ uv pip install ipywidgets
 uv pip install jupyter
 uv pip install tensorboard
 uv pip install huggingface-hub
+uv pip install numpy
+uv pip install pandas
