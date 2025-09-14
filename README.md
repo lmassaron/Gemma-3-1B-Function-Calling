@@ -19,21 +19,21 @@ This project provides a complete workflow for fine-tuning a large language model
 
 Baseline, with unquantized Gemma 3-1b-it:
 
-* Accuracy in function calling: ~0.27905
-* Match in helpful exchange: ~0.28897
+* Accuracy in function calling: ~0.28
+* Match in helpful exchange: ~0.29
 
 After finetuning:
-* Accuracy in function calling: ~0.90814
-* Match in helpful exchange: ~0.77873
+* Accuracy in function calling: ~0.91
+* Match in helpful exchange: ~0.78
 
 Baseline, with unquantized Gemma 3-270m-it:
 
-* Accuracy in function calling: ~0.12805
-* Match in helpful exchange: ~0.48171
+* Accuracy in function calling: ~0.13
+* Match in helpful exchange: ~0.48
 
 After finetuning:
-* Accuracy in function calling: ~0.90426
-* Match in helpful exchange: ~0.67602
+* Accuracy in function calling: ~0.90
+* Match in helpful exchange: ~0.68
 
 
 ## Getting Started
