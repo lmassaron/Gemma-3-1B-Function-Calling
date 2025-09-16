@@ -19,21 +19,21 @@ This project provides a complete workflow for fine-tuning a large language model
 
 Baseline, with unquantized Gemma 3-1b-it:
 
-* Accuracy in function calling: ~0.28
-* Match in helpful exchange: ~0.29
+* Accuracy in function calling (ROUGE-L): ~0.28
+* Match in helpful exchange (ROUGE-N): ~0.29
 
 After finetuning:
-* Accuracy in function calling: ~0.91
-* Match in helpful exchange: ~0.78
+* Accuracy in function calling (ROUGE-L): ~0.91
+* Match in helpful exchange (ROUGE-N): ~0.78
 
 Baseline, with unquantized Gemma 3-270m-it:
 
-* Accuracy in function calling: ~0.13
-* Match in helpful exchange: ~0.48
+* Accuracy in function calling (ROUGE-L): ~0.13
+* Match in helpful exchange (ROUGE-N): ~0.48
 
 After finetuning:
-* Accuracy in function calling: ~0.90
-* Match in helpful exchange: ~0.68
+* Accuracy in function calling (ROUGE-L): ~0.90
+* Match in helpful exchange (ROUGE-N): ~0.68
 
 
 ## Getting Started
@@ -78,3 +78,9 @@ To get started with this project, follow these steps:
 The base model for this project is `google/gemma-3-1b-it` or `google/gemma-3-270m-it`. The model is fine-tuned using Low-Rank Adaptation (LoRA), which is a parameter-efficient fine-tuning technique. The LoRA configuration can be found in the `function_calling_train.py` script.
 
 The training process uses the `trl` library and the `SFTTrainer` to perform supervised fine-tuning. The training arguments, such as the number of epochs, batch size, and learning rate, are also defined in the `function_calling_train.py` script.
+
+## About the evaluation
+
+The `compute_matching_percentage` function shows a strong resemblance to a component of the ROUGE-N score, specifically ROUGE-1. ROUGE-N is a metric that measures the overlap of n-grams (contiguous sequences of n words) between a candidate text and a reference text. It is commonly used in tasks like machine translation and text summarization.
+
+The `find_longest_common_sequence_length` function is designed to find the length of the longest common contiguous sequence. ROUGE-L is based on the Longest Common Subsequence (LCS). An LCS measures the longest sequence of words that appear in the same order in both the candidate and reference texts, but these words do not need to be contiguous. The `find_longest_common_sequence_length` function is designed to find the length of the longest common contiguous sequence, which makes it even stricter than the classical ROUGE-L metric.
